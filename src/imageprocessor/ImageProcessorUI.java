@@ -56,12 +56,14 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
+        mnSave = new javax.swing.JMenu();
         mnSaveOriginal = new javax.swing.JMenuItem();
         mnSaveBW = new javax.swing.JMenuItem();
         mnSaveReal = new javax.swing.JMenuItem();
         mnSaveImaginary = new javax.swing.JMenuItem();
         mnSaveAmplitude = new javax.swing.JMenuItem();
+        mnExport = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         jScrollPane1.setViewportView(jTextPane1);
@@ -193,7 +195,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
-        jMenu3.setText("Save");
+        mnSave.setText("Save");
 
         mnSaveOriginal.setText("Original");
         mnSaveOriginal.addActionListener(new java.awt.event.ActionListener() {
@@ -201,7 +203,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
                 mnSaveOriginalActionPerformed(evt);
             }
         });
-        jMenu3.add(mnSaveOriginal);
+        mnSave.add(mnSaveOriginal);
 
         mnSaveBW.setText("Black And White");
         mnSaveBW.addActionListener(new java.awt.event.ActionListener() {
@@ -209,7 +211,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
                 mnSaveBWActionPerformed(evt);
             }
         });
-        jMenu3.add(mnSaveBW);
+        mnSave.add(mnSaveBW);
 
         mnSaveReal.setText("Real");
         mnSaveReal.addActionListener(new java.awt.event.ActionListener() {
@@ -217,7 +219,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
                 mnSaveRealActionPerformed(evt);
             }
         });
-        jMenu3.add(mnSaveReal);
+        mnSave.add(mnSaveReal);
 
         mnSaveImaginary.setText("Imaginary");
         mnSaveImaginary.addActionListener(new java.awt.event.ActionListener() {
@@ -225,7 +227,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
                 mnSaveImaginaryActionPerformed(evt);
             }
         });
-        jMenu3.add(mnSaveImaginary);
+        mnSave.add(mnSaveImaginary);
 
         mnSaveAmplitude.setText("Amplitude");
         mnSaveAmplitude.addActionListener(new java.awt.event.ActionListener() {
@@ -233,9 +235,21 @@ public class ImageProcessorUI extends javax.swing.JFrame {
                 mnSaveAmplitudeActionPerformed(evt);
             }
         });
-        jMenu3.add(mnSaveAmplitude);
+        mnSave.add(mnSaveAmplitude);
 
-        jMenu1.add(jMenu3);
+        jMenu1.add(mnSave);
+
+        mnExport.setText("Export");
+
+        jMenuItem1.setText("Amplitude");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        mnExport.add(jMenuItem1);
+
+        jMenu1.add(mnExport);
 
         jMenuBar1.add(jMenu1);
 
@@ -316,6 +330,14 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     private void mnSaveImaginaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSaveImaginaryActionPerformed
         saveImage(imageProcessor.getImageImaginary());
     }//GEN-LAST:event_mnSaveImaginaryActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        try {
+            ImageProcessor.exportCsv("export.csv", imageProcessor.getValuesAmplitude());
+        } catch (IOException ex) {
+            Logger.getLogger(ImageProcessorUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -410,13 +432,15 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lblImage;
     private javax.swing.JLabel lblURL;
+    private javax.swing.JMenu mnExport;
+    private javax.swing.JMenu mnSave;
     private javax.swing.JMenuItem mnSaveAmplitude;
     private javax.swing.JMenuItem mnSaveBW;
     private javax.swing.JMenuItem mnSaveImaginary;

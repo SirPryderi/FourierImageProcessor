@@ -1,7 +1,10 @@
 package imageprocessor;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -59,6 +62,22 @@ public class ImageProcessor {
     private double[][] valuesReal;
     private double[][] valuesImaginary;
     private double[][] valuesAmplitude;
+
+    public double[][] getValuesGreyscale() {
+        return valuesGreyscale;
+    }
+
+    public double[][] getValuesReal() {
+        return valuesReal;
+    }
+
+    public double[][] getValuesImaginary() {
+        return valuesImaginary;
+    }
+
+    public double[][] getValuesAmplitude() {
+        return valuesAmplitude;
+    }
 
     long analysisTime = -1;
 
@@ -121,7 +140,7 @@ public class ImageProcessor {
     }
 
     public void launchAnalysis() {
-        valuesGreyscale = toArray();
+        valuesGreyscale = toArrayGreyscale(imageGreyscale);
 
         long startTime = System.currentTimeMillis();
         //Sets starting time to display cycles/seconds
@@ -161,6 +180,22 @@ public class ImageProcessor {
         return arr;
     }
 
+    private double[][] toArrayGreyscale(BufferedImage image) {
+        int heigth = image.getHeight();
+        int width = image.getWidth();
+
+        double[][] arr = new double[width][heigth];
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < heigth; j++) {
+                Color color = new Color(image.getRGB(i, j));
+                arr[i][j] = color.getRed();
+            }
+        }
+
+        return arr;
+    }
+
     public double[][] toArray() {
         return toArray(imageGreyscale);
     }
@@ -170,22 +205,28 @@ public class ImageProcessor {
 
         double max = getBiggestNumber(values);
         double min = getSmallestNumber(values);
-        
+
+        print("Max: " + max);
+        print("Min: " + min);
 
         for (int y = 0; y < values.length; y++) {
             for (int x = 0; x < values[y].length; x++) {
                 double value = values[x][y];
-                
-                print(value);
 
+                //print(value);
                 value = Math.abs(value);
-
                 //int Pixel = (int) value << 16 | (int) value << 8 | (int) value;
-
                 //Pixel = Pixel / 10000;
-                int Pixel = (int) ((value - min) / (max - min) * 0xff);
-                
-                
+                //int Pixel = (int) ((value - min) / (max - min) * 0xff);
+                int Pixel = (int) value;
+
+                //Pixel *= 2;
+                if (Pixel > 0xff) {
+                    Pixel = 0xff;
+                }
+
+                Pixel = Pixel + Pixel * 0x100 + Pixel * 0x10000;
+
                 //Color color = new Color(Pixel + Pixel * 16*16 + Pixel *16*16*16);
                 //img.setRGB(x, y, Pixel + Pixel * 16*16 + Pixel *16*16*16);
                 img.setRGB(x, y, Pixel);
@@ -250,5 +291,19 @@ public class ImageProcessor {
 
     public static void print(Object o) {
         System.out.println(o);
+    }
+
+    public static void exportCsv(String path, double[][] values) throws IOException {
+        FileWriter writer = new FileWriter(path);
+
+        for (double[] row : values) {
+
+            for (double value : row) {
+                writer.append(String.valueOf(value));
+                writer.append(",");
+            }
+
+            writer.append("\n");
+        }
     }
 }

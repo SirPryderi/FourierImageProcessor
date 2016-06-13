@@ -90,10 +90,11 @@ public class fft {
 
         //barrier = new CyclicBarrier(threadsCount + 1); // label0
         for (int pieces = 0; pieces < height; pieces += range) {
+            int start = pieces;
             int end = pieces + range - 1;
 
             //executor.execute(new AnalysisThread(inputData, realOut, imagOut, amplitudeOut, start, end));
-            tasks.add(new AnalysisThread(inputData, realOut, imagOut, amplitudeOut, pieces, end));
+            tasks.add(new AnalysisThread(inputData, realOut, imagOut, amplitudeOut, start, end));
         }
 
         CompletableFuture[] all = tasks.stream()

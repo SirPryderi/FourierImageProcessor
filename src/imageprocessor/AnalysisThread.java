@@ -33,5 +33,6 @@ class AnalysisThread implements Runnable {
     @Override
     public void run() {
         twoDfft(inputData, realOut, imagOut, amplitudeOut, start, end);
+        // System.out.printf("%d %d finished\n", start, end);
     }
 }
