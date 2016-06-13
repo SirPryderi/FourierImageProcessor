@@ -252,22 +252,35 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnOpenActionPerformed
 
     private void btnPictureOriginalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPictureOriginalActionPerformed
-        displayImage(imageProcessor.getOriginalImage());
+        displayImage(imageProcessor.getImageOriginal());
     }//GEN-LAST:event_btnPictureOriginalActionPerformed
 
     private void btnPictureRealActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPictureRealActionPerformed
-        displayImage(imageProcessor.getRealImage());
+        displayImage(imageProcessor.getImageReal());
     }//GEN-LAST:event_btnPictureRealActionPerformed
 
     private void btnPictureBWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPictureBWActionPerformed
-        displayImage(imageProcessor.getImage());
+        displayImage(imageProcessor.getImageGreyscale());
     }//GEN-LAST:event_btnPictureBWActionPerformed
 
     private void btnAnalysisStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalysisStartActionPerformed
         imageProcessor.launchAnalysis();
 
-        JOptionPane.showMessageDialog(rootPane, "Analysis Complete", "Analysis Complete", JOptionPane.INFORMATION_MESSAGE);
-        
+        double speed;
+
+        try {
+            speed = imageProcessor.getIterationsFft() / imageProcessor.getAnalysisTime() * 1000;
+        } catch (Exception e) {
+            speed = 0;
+        }
+
+        JOptionPane.showMessageDialog(rootPane, "Analysis Complete!\n"
+                + imageProcessor.getAnalysisTime() + "ms\n"
+                + imageProcessor.getIterationsFft() + " iterations\n"
+                + speed + "i/s",
+                "Analysis Complete",
+                JOptionPane.INFORMATION_MESSAGE);
+
         btnPictureAmplitude.setEnabled(true);
         btnPictureBW.setEnabled(true);
         btnPictureImaginary.setEnabled(true);
@@ -277,31 +290,31 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAnalysisStartActionPerformed
 
     private void btnPictureImaginaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPictureImaginaryActionPerformed
-        displayImage(imageProcessor.getImgImage());
+        displayImage(imageProcessor.getImageImaginary());
     }//GEN-LAST:event_btnPictureImaginaryActionPerformed
 
     private void btnPictureAmplitudeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPictureAmplitudeActionPerformed
-        displayImage(imageProcessor.getAmplImage());
+        displayImage(imageProcessor.getImageAmplitude());
     }//GEN-LAST:event_btnPictureAmplitudeActionPerformed
 
     private void mnSaveOriginalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSaveOriginalActionPerformed
-        saveImage(imageProcessor.getOriginalImage());
+        saveImage(imageProcessor.getImageOriginal());
     }//GEN-LAST:event_mnSaveOriginalActionPerformed
 
     private void mnSaveBWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSaveBWActionPerformed
-        saveImage(imageProcessor.getImage());
+        saveImage(imageProcessor.getImageGreyscale());
     }//GEN-LAST:event_mnSaveBWActionPerformed
 
     private void mnSaveAmplitudeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSaveAmplitudeActionPerformed
-        saveImage(imageProcessor.getAmplImage());
+        saveImage(imageProcessor.getImageAmplitude());
     }//GEN-LAST:event_mnSaveAmplitudeActionPerformed
 
     private void mnSaveRealActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSaveRealActionPerformed
-        saveImage(imageProcessor.getRealImage());
+        saveImage(imageProcessor.getImageReal());
     }//GEN-LAST:event_mnSaveRealActionPerformed
 
     private void mnSaveImaginaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnSaveImaginaryActionPerformed
-        saveImage(imageProcessor.getImgImage());
+        saveImage(imageProcessor.getImageImaginary());
     }//GEN-LAST:event_mnSaveImaginaryActionPerformed
 
     /**
@@ -340,7 +353,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     void choosePicture() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        
+
         int result = fileChooser.showOpenDialog(rootPane);
 
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -362,7 +375,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
             Logger.getLogger(ImageProcessorUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        displayImage(imageProcessor.getImage());
+        displayImage(imageProcessor.getImageGreyscale());
 
     }
 

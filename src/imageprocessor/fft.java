@@ -27,7 +27,7 @@ public class fft {
         a 2D array with an even number of rows and columns
         ie, only pictures with even numbered dimensions are accepted
      */
-    static int twoDfft(double[][] inputData, double[][] realOut, double[][] imagOut, double[][] amplitudeOut, int start, int end) {
+    static void twoDfft(double[][] inputData, double[][] realOut, double[][] imagOut, double[][] amplitudeOut, int start, int end) {
         int height = inputData.length;
         int width = inputData[0].length;
         //used to cut the output image to the desired size
@@ -37,10 +37,10 @@ public class fft {
         }
 
         if (end >= height) {
-            throw new InvalidParameterException("End out bound");
+            end = height - 1;
+            //throw new InvalidParameterException("End out bound");
         }
-
-        int cycleCounter = 0;
+        
         //counter used to calculate efficiency
 
         for (int yWave = start; yWave < end; yWave++) {
@@ -57,7 +57,6 @@ public class fft {
                         //calculates the imaginary values of the frequency domain
                         amplitudeOut[yWave][xWave] = Math.sqrt(realOut[yWave][xWave] * realOut[yWave][xWave] + imagOut[yWave][xWave] * imagOut[yWave][xWave]);
                         //calculates the amplitude of the frequency domain 
-                        cycleCounter++;
                         //counter used to calculate efficiency
                     }
                     //Section was removed to increase performance by a factor of 6	
@@ -70,15 +69,14 @@ public class fft {
                 }
             }
         }
-
-        return cycleCounter;
+        
         //return counter to main, so it can be displayed
     }
 
-    static int twoDfft(double[][] inputData, double[][] realOut, double[][] imagOut, double[][] amplitudeOut) {
+    static void twoDfft(double[][] inputData, double[][] realOut, double[][] imagOut, double[][] amplitudeOut) {
         int height = inputData.length;
 
-        return twoDfft(inputData, realOut, imagOut, amplitudeOut, 0, height);
+        twoDfft(inputData, realOut, imagOut, amplitudeOut, 0, height);
     }
 
     static void twoDfftMultiThreaded(double[][] inputData, double[][] realOut, double[][] imagOut, double[][] amplitudeOut, int threadsCount) {
@@ -92,13 +90,10 @@ public class fft {
 
         //barrier = new CyclicBarrier(threadsCount + 1); // label0
         for (int pieces = 0; pieces < height; pieces += range) {
-            int start = pieces;
             int end = pieces + range - 1;
 
-            System.out.println(start + " " + end);
-
             //executor.execute(new AnalysisThread(inputData, realOut, imagOut, amplitudeOut, start, end));
-            tasks.add(new AnalysisThread(inputData, realOut, imagOut, amplitudeOut, start, end));
+            tasks.add(new AnalysisThread(inputData, realOut, imagOut, amplitudeOut, pieces, end));
         }
 
         CompletableFuture[] all = tasks.stream()

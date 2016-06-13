@@ -1,9 +1,7 @@
 package imageprocessor;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.ForkJoinPool;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,21 +14,34 @@ import java.util.concurrent.ForkJoinPool;
  */
 public class ImageProcessor {
 
-    private BufferedImage originalImage;
-    private BufferedImage image;
-    private BufferedImage realImage;
+    private BufferedImage imageOriginal;
+    private BufferedImage imageGreyscale;
+    private BufferedImage imageReal;
+    private BufferedImage imageImaginary;
+    private BufferedImage imageAmplitude;
 
-    public BufferedImage getRealImage() {
-        return realImage;
+    public BufferedImage getImageGreyscale() {
+        return imageGreyscale;
     }
 
-    public BufferedImage getImgImage() {
-        return imgImage;
+    public BufferedImage getImageOriginal() {
+        return imageOriginal;
     }
 
-    public BufferedImage getAmplImage() {
-        return amplImage;
+    public BufferedImage getImageReal() {
+        return imageReal;
     }
+
+    public BufferedImage getImageImaginary() {
+        return imageImaginary;
+    }
+
+    public BufferedImage getImageAmplitude() {
+        return imageAmplitude;
+    }
+
+    private int width;
+    private int heigth;
 
     public int getWidth() {
         return width;
@@ -40,56 +51,54 @@ public class ImageProcessor {
         return heigth;
     }
 
-    private BufferedImage imgImage;
-    private BufferedImage amplImage;
+    public long getIterationsFft() {
+        return width * width * heigth * heigth;
+    }
 
-    private double[][] imageValues;
-    private double[][] realValues;
-    private double[][] imgValues;
-    private double[][] amplitutudeValues;
-
-    private int width;
-    private int heigth;
+    private double[][] valuesGreyscale;
+    private double[][] valuesReal;
+    private double[][] valuesImaginary;
+    private double[][] valuesAmplitude;
 
     long analysisTime = -1;
 
+    public long getAnalysisTime() {
+        return analysisTime;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param image the image to process
+     */
     public ImageProcessor(BufferedImage image) {
-        setImage(image);
+        setImageGreyscale(image);
     }
 
-    public void setImage(BufferedImage image) {
-        this.originalImage = image;
+    public void setImageGreyscale(BufferedImage image) {
+        this.imageOriginal = image;
 
-        this.image = toGrayScale(image);
+        this.imageGreyscale = toGrayScale(image);
 
-        width = image.getWidth();
-        heigth = image.getHeight();
+        width = imageGreyscale.getWidth();
+        heigth = imageGreyscale.getHeight();
 
-        imageValues = new double[width][heigth];
-        realValues = new double[width][heigth];
-        imgValues = new double[width][heigth];
-        amplitutudeValues = new double[width][heigth];
-    }
-
-    public BufferedImage getImage() {
-        return image;
-    }
-
-    public BufferedImage getOriginalImage() {
-        return originalImage;
+        valuesImaginary = new double[width][heigth];
+        valuesReal = new double[width][heigth];
+        valuesAmplitude = new double[width][heigth];
     }
 
     public static BufferedImage toGrayScale(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
-        //Fetches the size of the image
+        //Fetches the size of the imageGreyscale
 
         BufferedImage image2 = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
 //        if ((width % 2) != 0 || (height % 2) != 0) {
-//            System.out.println("Height and width of the image must be even");
+//            System.out.println("Height and width of the imageGreyscale must be even");
 //        }
-        //Ensures that the user does not enter an image of a invalid size
+        //Ensures that the user does not enter an imageGreyscale of a invalid size
         //allocates space in memory for the arrays
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -98,13 +107,13 @@ public class ImageProcessor {
                 int r = (p >> 16) & 0xff;
                 int g = (p >> 8) & 0xff;
                 int b = p & 0xff;
-                //Fetches rgb values from image
+                //Fetches rgb values from imageGreyscale
                 int avg = (r + g + b) / 3;
                 //Calculates average
                 p = (a << 24) | (avg << 16) | (avg << 8) | avg;
                 //Replaces rgb with average
                 image2.setRGB(x, y, p);
-                //Makes image black and white
+                //Makes imageGreyscale black and white
             }
         }
 
@@ -112,7 +121,7 @@ public class ImageProcessor {
     }
 
     public void launchAnalysis() {
-        imageValues = toArray();
+        valuesGreyscale = toArray();
 
         long startTime = System.currentTimeMillis();
         //Sets starting time to display cycles/seconds
@@ -120,21 +129,20 @@ public class ImageProcessor {
         int processors = Runtime.getRuntime().availableProcessors();
 
         //print("Processors: " + processors);
+        fft.twoDfftMultiThreaded(valuesGreyscale, valuesReal, valuesImaginary, valuesAmplitude, processors);
 
-        fft.twoDfftMultiThreaded(imageValues, realValues, imageValues, amplitutudeValues, processors);
-        
         //fft.twoDfft(imageValues, realValues, imageValues, amplitutudeValues);
         //Initialises the fft algorithm 
         long endTime = System.currentTimeMillis();
         analysisTime = endTime - startTime;
 
-        System.out.println(analysisTime + "ms");
+        print(analysisTime + "ms");
         //System.out.println(cyclesCounter + " iterations");
 
         //Sets end time and shows time taken to calculate
-        realImage = arrayToImage(realValues, width, heigth);
-        imgImage = arrayToImage(imageValues, width, heigth);
-        amplImage = arrayToImage(amplitutudeValues, width, heigth);
+        imageReal = arrayToImage(valuesReal, width, heigth);
+        imageImaginary = arrayToImage(valuesImaginary, width, heigth);
+        imageAmplitude = arrayToImage(valuesAmplitude, width, heigth);
 
     }
 
@@ -154,7 +162,7 @@ public class ImageProcessor {
     }
 
     public double[][] toArray() {
-        return toArray(image);
+        return toArray(imageGreyscale);
     }
 
     public static BufferedImage arrayToImage(double[][] values, int width, int heigth) {
@@ -162,15 +170,22 @@ public class ImageProcessor {
 
         double max = getBiggestNumber(values);
         double min = getSmallestNumber(values);
+        
 
         for (int y = 0; y < values.length; y++) {
             for (int x = 0; x < values[y].length; x++) {
                 double value = values[x][y];
+                
+                print(value);
 
-                //int Pixel = (int) values[x][y] << 16 | (int) values[x][y] << 8 | (int) values[x][y];
+                value = Math.abs(value);
+
+                //int Pixel = (int) value << 16 | (int) value << 8 | (int) value;
+
                 //Pixel = Pixel / 10000;
                 int Pixel = (int) ((value - min) / (max - min) * 0xff);
-
+                
+                
                 //Color color = new Color(Pixel + Pixel * 16*16 + Pixel *16*16*16);
                 //img.setRGB(x, y, Pixel + Pixel * 16*16 + Pixel *16*16*16);
                 img.setRGB(x, y, Pixel);
@@ -181,7 +196,7 @@ public class ImageProcessor {
     }
 
     private BufferedImage toGrayScale() {
-        return toGrayScale(this.image);
+        return toGrayScale(this.imageGreyscale);
     }
 
     public static Image maxSize(BufferedImage image, int maxSize) {
@@ -190,7 +205,7 @@ public class ImageProcessor {
 
         double ratio = (double) width / (double) heigth;
 
-        if (heigth < maxSize && width < maxSize) {
+        if (heigth < maxSize && width < maxSize && false) {
             return image;
         } else if (heigth < maxSize) {
             heigth = maxSize;
@@ -236,5 +251,4 @@ public class ImageProcessor {
     public static void print(Object o) {
         System.out.println(o);
     }
-
 }
