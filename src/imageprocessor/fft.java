@@ -3,16 +3,10 @@ package imageprocessor;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CompletableFuture;
 import static java.util.concurrent.CompletableFuture.runAsync;
-import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.RecursiveAction;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The Fast Fourier Transform algorithm
@@ -40,9 +34,8 @@ public class fft {
             end = height - 1;
             //throw new InvalidParameterException("End out bound");
         }
-        
-        //counter used to calculate efficiency
 
+        //counter used to calculate efficiency
         for (int yWave = start; yWave <= end; yWave++) {
             //First loop which iterates on the input data
             for (int xWave = 0; xWave < width; xWave++) {
@@ -69,7 +62,7 @@ public class fft {
                 }
             }
         }
-        
+
         //return counter to main, so it can be displayed
     }
 
@@ -100,9 +93,9 @@ public class fft {
         CompletableFuture[] all = tasks.stream()
                 .map(r -> runAsync(r, executor))
                 .toArray(CompletableFuture[]::new);
-        
+
         CompletableFuture.allOf(all).join();
-        
+
         executor.shutdown();
     }
 }
