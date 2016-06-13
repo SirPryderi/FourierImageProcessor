@@ -3,6 +3,7 @@ package imageprocessor;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ForkJoinPool;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -116,10 +117,13 @@ public class ImageProcessor {
         long startTime = System.currentTimeMillis();
         //Sets starting time to display cycles/seconds
 
-        fft.twoDfftMultiThreaded(imageValues, realValues, imageValues, amplitutudeValues, 1);
+        int processors = Runtime.getRuntime().availableProcessors();
+
+        //print("Processors: " + processors);
+
+        fft.twoDfftMultiThreaded(imageValues, realValues, imageValues, amplitutudeValues, processors);
         
         //fft.twoDfft(imageValues, realValues, imageValues, amplitutudeValues);
-
         //Initialises the fft algorithm 
         long endTime = System.currentTimeMillis();
         analysisTime = endTime - startTime;
@@ -227,6 +231,10 @@ public class ImageProcessor {
         }
 
         return biggest;
+    }
+
+    public static void print(Object o) {
+        System.out.println(o);
     }
 
 }
