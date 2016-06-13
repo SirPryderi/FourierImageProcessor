@@ -43,7 +43,7 @@ public class fft {
         
         //counter used to calculate efficiency
 
-        for (int yWave = start; yWave < end; yWave++) {
+        for (int yWave = start; yWave <= end; yWave++) {
             //First loop which iterates on the input data
             for (int xWave = 0; xWave < width; xWave++) {
                 //Second loop which iterates on the input data
