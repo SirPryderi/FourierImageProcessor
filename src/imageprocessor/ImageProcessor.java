@@ -22,7 +22,8 @@ public class ImageProcessor {
     private BufferedImage imageReal;
     private BufferedImage imageImaginary;
     private BufferedImage imageAmplitude;
-
+    
+    // <editor-fold desc="getters" defaultstate="collapsed">
     public BufferedImage getImageGreyscale() {
         return imageGreyscale;
     }
@@ -42,10 +43,12 @@ public class ImageProcessor {
     public BufferedImage getImageAmplitude() {
         return imageAmplitude;
     }
+    // </editor-fold>
 
     private int width;
     private int heigth;
-
+    
+    // <editor-fold desc="getters" defaultstate="collapsed">
     public int getWidth() {
         return width;
     }
@@ -57,12 +60,14 @@ public class ImageProcessor {
     public double getIterationsFft() {
         return (double) width * (double) width * (double) heigth * (double) heigth;
     }
+    // </editor-fold>
 
     private double[][] valuesGreyscale;
     private double[][] valuesReal;
     private double[][] valuesImaginary;
     private double[][] valuesAmplitude;
-
+    
+    // <editor-fold desc="getters" defaultstate="collapsed">
     public double[][] getValuesGreyscale() {
         return valuesGreyscale;
     }
@@ -78,11 +83,24 @@ public class ImageProcessor {
     public double[][] getValuesAmplitude() {
         return valuesAmplitude;
     }
+    // </editor-fold>
 
-    long analysisTime = -1;
-
+    private long analysisTime = -1;
+    
+    // <editor-fold desc="getters" defaultstate="collapsed">
     public long getAnalysisTime() {
         return analysisTime;
+    }
+    // </editor-fold>
+    
+    private int treshold = 50;
+
+    public int getTreshold() {
+        return treshold;
+    }
+
+    public void setTreshold(int treshold) {
+        this.treshold = treshold;
     }
 
     /**
@@ -158,11 +176,13 @@ public class ImageProcessor {
         print(analysisTime + "ms");
         //System.out.println(cyclesCounter + " iterations");
 
-        //Sets end time and shows time taken to calculate
+        updateRenderedImages();
+    }
+    
+    public void updateRenderedImages(){
         imageReal = arrayToImage(valuesReal, width, heigth);
         imageImaginary = arrayToImage(valuesImaginary, width, heigth);
         imageAmplitude = arrayToImage(valuesAmplitude, width, heigth);
-
     }
 
     private double[][] toArray(BufferedImage image) {
@@ -200,7 +220,7 @@ public class ImageProcessor {
         return toArray(imageGreyscale);
     }
 
-    public static BufferedImage arrayToImage(double[][] values, int width, int heigth) {
+    public BufferedImage arrayToImage(double[][] values, int width, int heigth) {
         BufferedImage img = new BufferedImage(width, heigth, BufferedImage.TYPE_INT_RGB);
 
         double max = getBiggestNumber(values);
@@ -223,6 +243,10 @@ public class ImageProcessor {
                 //Pixel *= 2;
                 if (Pixel > 0xff) {
                     Pixel = 0xff;
+                }
+                
+                if(Pixel < treshold){
+                    Pixel = 0;
                 }
 
                 Pixel = Pixel + Pixel * 0x100 + Pixel * 0x10000;
