@@ -54,8 +54,8 @@ public class ImageProcessor {
         return heigth;
     }
 
-    public long getIterationsFft() {
-        return width * width * heigth * heigth;
+    public double getIterationsFft() {
+        return (double) width * (double) width * (double) heigth * (double) heigth;
     }
 
     private double[][] valuesGreyscale;
