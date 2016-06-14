@@ -89,7 +89,7 @@ public class ImageProcessor {
     }
     // </editor-fold>
 
-    private int treshold = 50;
+    private int treshold = 0;
 
     public int getTreshold() {
         return treshold;
@@ -150,11 +150,11 @@ public class ImageProcessor {
     }
 
     public void updateRenderedImages() {
-        imageReal = ProcessorPixelMap.arrayToImage(valuesReal, width, heigth);
-        imageImaginary = ProcessorPixelMap.arrayToImage(valuesImaginary, width, heigth);
-        imageAmplitude = ProcessorPixelMap.arrayToImage(valuesAmplitude, width, heigth);
+        imageReal = ProcessorPixelMap.arrayToImage(valuesReal, width, heigth, treshold);
+        imageImaginary = ProcessorPixelMap.arrayToImage(valuesImaginary, width, heigth, treshold);
+        imageAmplitude = ProcessorPixelMap.arrayToImage(valuesAmplitude, width, heigth, treshold);
     }
-    
+
     public static void print(Object o) {
         System.out.println(o);
     }

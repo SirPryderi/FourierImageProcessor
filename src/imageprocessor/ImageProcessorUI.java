@@ -193,7 +193,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         gridBagConstraints.gridy = 1;
         getContentPane().add(jSeparator1, gridBagConstraints);
 
-        txtTreshold.setText("50");
+        txtTreshold.setText("0");
         txtTreshold.setPreferredSize(new java.awt.Dimension(90, 32));
         txtTreshold.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

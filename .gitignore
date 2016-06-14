@@ -67,3 +67,5 @@ $RECYCLE.BIN/
 *.csv
 *.png
 build/built-jar.properties
+nbproject/private/private.xml
+build/classes/imageprocessor/ImageProcessorUI.form

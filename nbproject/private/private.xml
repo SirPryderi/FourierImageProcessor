@@ -5,7 +5,7 @@
             <url>src/imageprocessor/ImageProcessor.java</url>
             <bookmark id="1">
                 <name/>
-                <line>223</line>
+                <line>155</line>
                 <key/>
             </bookmark>
         </file>
@@ -15,7 +15,10 @@
             <file>file:/C:/Users/Vittorio/Desktop/ImageProcessor/src/imageprocessor/fft.java</file>
             <file>file:/C:/Users/Vittorio/Desktop/ImageProcessor/src/imageprocessor/AnalysisThread.java</file>
             <file>file:/C:/Users/Vittorio/Desktop/ImageProcessor/src/imageprocessor/ImageProcessor.java</file>
+            <file>file:/C:/Users/Vittorio/Desktop/ImageProcessor/src/imageprocessor/ProcessorImage.java</file>
+            <file>file:/C:/Users/Vittorio/Desktop/ImageProcessor/src/imageprocessor/Colour.java</file>
             <file>file:/C:/Users/Vittorio/Desktop/ImageProcessor/src/imageprocessor/ImageProcessorUI.java</file>
+            <file>file:/C:/Users/Vittorio/Desktop/ImageProcessor/src/imageprocessor/ProcessorPixelMap.java</file>
         </group>
     </open-files>
 </project-private>
