@@ -66,3 +66,4 @@ $RECYCLE.BIN/
 *.form
 *.csv
 *.png
+build/built-jar.properties

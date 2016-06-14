@@ -17,37 +17,37 @@ import java.io.IOException;
  */
 public class ImageProcessor {
 
-    private BufferedImage imageOriginal;
-    private BufferedImage imageGreyscale;
-    private BufferedImage imageReal;
-    private BufferedImage imageImaginary;
-    private BufferedImage imageAmplitude;
-    
+    private ProcessorImage imageOriginal;
+    private ProcessorImage imageGreyscale;
+    private ProcessorImage imageReal;
+    private ProcessorImage imageImaginary;
+    private ProcessorImage imageAmplitude;
+
     // <editor-fold desc="getters" defaultstate="collapsed">
-    public BufferedImage getImageGreyscale() {
+    public ProcessorImage getImageGreyscale() {
         return imageGreyscale;
     }
 
-    public BufferedImage getImageOriginal() {
+    public ProcessorImage getImageOriginal() {
         return imageOriginal;
     }
 
-    public BufferedImage getImageReal() {
+    public ProcessorImage getImageReal() {
         return imageReal;
     }
 
-    public BufferedImage getImageImaginary() {
+    public ProcessorImage getImageImaginary() {
         return imageImaginary;
     }
 
-    public BufferedImage getImageAmplitude() {
+    public ProcessorImage getImageAmplitude() {
         return imageAmplitude;
     }
     // </editor-fold>
 
     private int width;
     private int heigth;
-    
+
     // <editor-fold desc="getters" defaultstate="collapsed">
     public int getWidth() {
         return width;
@@ -66,7 +66,7 @@ public class ImageProcessor {
     private double[][] valuesReal;
     private double[][] valuesImaginary;
     private double[][] valuesAmplitude;
-    
+
     // <editor-fold desc="getters" defaultstate="collapsed">
     public double[][] getValuesGreyscale() {
         return valuesGreyscale;
@@ -86,13 +86,13 @@ public class ImageProcessor {
     // </editor-fold>
 
     private long analysisTime = -1;
-    
+
     // <editor-fold desc="getters" defaultstate="collapsed">
     public long getAnalysisTime() {
         return analysisTime;
     }
     // </editor-fold>
-    
+
     private int treshold = 50;
 
     public int getTreshold() {
@@ -108,14 +108,20 @@ public class ImageProcessor {
      *
      * @param image the image to process
      */
-    public ImageProcessor(BufferedImage image) {
+    public ImageProcessor(ProcessorImage image) {
         setImageGreyscale(image);
     }
 
-    public void setImageGreyscale(BufferedImage image) {
+    public ImageProcessor(BufferedImage image) {
+        ProcessorImage pImage = new ProcessorImage(image);
+
+        setImageGreyscale(pImage);
+    }
+
+    public void setImageGreyscale(ProcessorImage image) {
         this.imageOriginal = image;
 
-        this.imageGreyscale = toGrayScale(image);
+        this.imageGreyscale = image.toGrayScale();
 
         width = imageGreyscale.getWidth();
         heigth = imageGreyscale.getHeight();
@@ -125,40 +131,8 @@ public class ImageProcessor {
         valuesAmplitude = new double[width][heigth];
     }
 
-    public static BufferedImage toGrayScale(BufferedImage image) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        //Fetches the size of the imageGreyscale
-
-        BufferedImage image2 = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-//        if ((width % 2) != 0 || (height % 2) != 0) {
-//            System.out.println("Height and width of the imageGreyscale must be even");
-//        }
-        //Ensures that the user does not enter an imageGreyscale of a invalid size
-        //allocates space in memory for the arrays
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int p = image.getRGB(x, y);
-                int a = (p >> 24) & 0xff;
-                int r = (p >> 16) & 0xff;
-                int g = (p >> 8) & 0xff;
-                int b = p & 0xff;
-                //Fetches rgb values from imageGreyscale
-                int avg = (r + g + b) / 3;
-                //Calculates average
-                p = (a << 24) | (avg << 16) | (avg << 8) | avg;
-                //Replaces rgb with average
-                image2.setRGB(x, y, p);
-                //Makes imageGreyscale black and white
-            }
-        }
-
-        return image2;
-    }
-
     public void launchAnalysis() {
-        valuesGreyscale = toArrayGreyscale(imageGreyscale);
+        valuesGreyscale = imageGreyscale.toArrayGreyscale();
 
         long startTime = System.currentTimeMillis();
         //Sets starting time to display cycles/seconds
@@ -178,50 +152,15 @@ public class ImageProcessor {
 
         updateRenderedImages();
     }
-    
-    public void updateRenderedImages(){
+
+    public void updateRenderedImages() {
         imageReal = arrayToImage(valuesReal, width, heigth);
         imageImaginary = arrayToImage(valuesImaginary, width, heigth);
         imageAmplitude = arrayToImage(valuesAmplitude, width, heigth);
     }
 
-    private double[][] toArray(BufferedImage image) {
-        int heigth = image.getHeight();
-        int width = image.getWidth();
-
-        double[][] arr = new double[width][heigth];
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < heigth; j++) {
-                arr[i][j] = image.getRGB(i, j);
-            }
-        }
-
-        return arr;
-    }
-
-    private double[][] toArrayGreyscale(BufferedImage image) {
-        int heigth = image.getHeight();
-        int width = image.getWidth();
-
-        double[][] arr = new double[width][heigth];
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < heigth; j++) {
-                Color color = new Color(image.getRGB(i, j));
-                arr[i][j] = color.getRed();
-            }
-        }
-
-        return arr;
-    }
-
-    public double[][] toArray() {
-        return toArray(imageGreyscale);
-    }
-
-    public BufferedImage arrayToImage(double[][] values, int width, int heigth) {
-        BufferedImage img = new BufferedImage(width, heigth, BufferedImage.TYPE_INT_RGB);
+    public ProcessorImage arrayToImage(double[][] values, int width, int heigth) {
+        ProcessorImage img = new ProcessorImage(width, heigth, ProcessorImage.TYPE_INT_RGB);
 
         double max = getBiggestNumber(values);
         double min = getSmallestNumber(values);
@@ -244,8 +183,8 @@ public class ImageProcessor {
                 if (Pixel > 0xff) {
                     Pixel = 0xff;
                 }
-                
-                if(Pixel < treshold){
+
+                if (Pixel < treshold) {
                     Pixel = 0;
                 }
 
@@ -258,29 +197,6 @@ public class ImageProcessor {
         }
 
         return img;
-    }
-
-    private BufferedImage toGrayScale() {
-        return toGrayScale(this.imageGreyscale);
-    }
-
-    public static Image maxSize(BufferedImage image, int maxSize) {
-        int width = image.getWidth();
-        int heigth = image.getHeight();
-
-        double ratio = (double) width / (double) heigth;
-
-        if (heigth < maxSize && width < maxSize && false) {
-            return image;
-        } else if (heigth < maxSize) {
-            heigth = maxSize;
-            width = (int) Math.floor(maxSize * ratio);
-        } else {
-            width = maxSize;
-            heigth = (int) Math.floor(maxSize / ratio);
-        }
-
-        return image.getScaledInstance(width, heigth, BufferedImage.SCALE_SMOOTH);
     }
 
     public static double getSmallestNumber(double[][] arr) {
@@ -313,10 +229,6 @@ public class ImageProcessor {
         return biggest;
     }
 
-    public static void print(Object o) {
-        System.out.println(o);
-    }
-
     public static void exportCsv(String path, double[][] values) throws IOException {
         FileWriter writer = new FileWriter(path);
 
@@ -329,5 +241,9 @@ public class ImageProcessor {
 
             writer.append("\n");
         }
+    }
+    
+    public static void print(Object o) {
+        System.out.println(o);
     }
 }

@@ -5,7 +5,6 @@
  */
 package imageprocessor;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -364,7 +363,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
             imageProcessor.setTreshold(treshold);
 
             imageProcessor.updateRenderedImages();
-            
+
             displayImage(imageProcessor.getImageReal());
         } catch (NumberFormatException numberFormatException) {
             JOptionPane.showMessageDialog(rootPane, "Invalid treshold.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -438,15 +437,15 @@ public class ImageProcessorUI extends javax.swing.JFrame {
 
     }
 
-    void displayImage(BufferedImage image) {
-        ImageIcon icon = new ImageIcon(ImageProcessor.maxSize(image, 300));
+    void displayImage(ProcessorImage image) {
+        ImageIcon icon = new ImageIcon(image.getMaxScaledInstance(300));
 
         lblImage.setIcon(icon);
 
         this.pack();
     }
 
-    void saveImage(BufferedImage image) {
+    void saveImage(ProcessorImage image) {
         File file = new File("image.png");
 
         try {
