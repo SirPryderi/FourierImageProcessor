@@ -350,7 +350,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         try {
-            ImageProcessor.exportCsv("export.csv", imageProcessor.getValuesAmplitude());
+            ProcessorPixelMap.exportCsv("export.csv", imageProcessor.getValuesAmplitude());
         } catch (IOException ex) {
             Logger.getLogger(ImageProcessorUI.class.getName()).log(Level.SEVERE, null, ex);
         }

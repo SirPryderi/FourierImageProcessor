@@ -5,7 +5,6 @@
  */
 package imageprocessor;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
@@ -103,8 +102,9 @@ public class ProcessorImage extends BufferedImage {
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < heigth; j++) {
-                Color color = new Color(getRGB(i, j));
-                arr[i][j] = color.getRed();
+                int color = Colour.toRGBArray(getRGB(i, j))[0];
+
+                arr[i][j] = color;
             }
         }
 
