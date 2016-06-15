@@ -62,10 +62,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /dist/
+/nbproject/
 /build/
 *.form
 *.csv
 *.png
-build/built-jar.properties
-nbproject/private/private.xml
-build/classes/imageprocessor/ImageProcessorUI.form
+*.docx

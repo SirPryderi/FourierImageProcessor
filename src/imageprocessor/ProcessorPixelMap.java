@@ -34,31 +34,43 @@ public class ProcessorPixelMap {
         double max = getBiggestNumber(values, true);
         double min = getSmallestNumber(values, true);
 
+        System.out.println("Max: " + max);
+        System.out.println("Min: " + min);
+
         for (int x = 0; x < values.length; x++) {
             for (int y = 0; y < values[x].length; y++) {
                 double value = values[x][y];
 
-                //print(value);
                 value = Math.abs(value);
-                //int Pixel = (int) value << 16 | (int) value << 8 | (int) value;
-                //Pixel = Pixel / 10000;
-                //int Pixel = (int) ((value - min) / (max - min) * 0xff);
-                int Pixel = (int) value;
-
-                //Pixel *= 2;
-                if (Pixel > 0xff) {
-                    Pixel = 0xff;
+                
+                if (value < treshold) {
+                    value = 0;
                 }
 
-                if (Pixel < treshold) {
-                    Pixel = 0;
+                if (min < treshold) {
+                    min = treshold;
+                }
+                
+                if (value < min) {
+                    System.err.println("PUTTANA LA MARMELLATA");
                 }
 
-                Pixel = Pixel + Pixel * 0x100 + Pixel * 0x10000;
+                if (value > max) {
+                    System.err.println("PUTTANA LA MERDA");
+                }
 
-                //Color color = new Color(Pixel + Pixel * 16*16 + Pixel *16*16*16);
-                //img.setRGB(x, y, Pixel + Pixel * 16*16 + Pixel *16*16*16);
-                img.setRGB(x, y, Pixel);
+                double percentage = (value - min) / (max - min);
+
+                //System.out.println(percentage);
+                int Pixel0 = Colour.percentageToColorSpectrum(percentage);
+
+                int Pixel1 = Colour.percentageToHeatMap(percentage);
+
+                int Pixel2 = Colour.percentageToGreyScale(percentage);
+
+                int Pixel3 = Colour.getGreyFromHex((int) value);
+
+                img.setRGB(x, y, Pixel3);
             }
         }
 

@@ -5,6 +5,8 @@
  */
 package imageprocessor;
 
+import java.awt.Color;
+
 /**
  *
  * @author Vittorio
@@ -24,9 +26,11 @@ public class Colour {
 
         return RGB;
     }
-    
+
     public static int percentageToHeatMap(double percentage) {
         int r, g, b = 0;
+
+        percentage = percentage * 100d;
 
         if (percentage == 100) {
             percentage = 99;
@@ -42,4 +46,33 @@ public class Colour {
 
         return toRGBInt(r, g, b);
     }
+
+    public static int percentageToGreyScale(double percentage) {
+        int Pixel = (int) percentage * 0xff;
+
+        return getGreyFromHex(Pixel);
+    }
+
+    public static int percentageToColorSpectrum(double percentage) {
+        percentage = percentage * 0.5d;
+
+        Color RGB = Color.getHSBColor((float) percentage, 1.0f, 1.0f);
+
+        return RGB.getRGB();
+    }
+
+    public static int getGreyFromHex(int hex) {
+        if (hex > 0xff) {
+            hex = 0xff;
+        }
+
+        if (hex < 0) {
+            hex = 0;
+        }
+
+        hex = hex + hex * 0x100 + hex * 0x10000;
+
+        return hex;
+    }
+
 }
