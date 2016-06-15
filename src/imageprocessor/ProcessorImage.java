@@ -62,31 +62,31 @@ public class ProcessorImage extends BufferedImage {
 
     public Image getMaxScaledInstance(int maxSize) {
         int width = this.getWidth();
-        int heigth = this.getHeight();
+        int height = this.getHeight();
 
-        double ratio = (double) width / (double) heigth;
+        double ratio = (double) width / (double) height;
 
-        if (heigth < maxSize && width < maxSize && false) {
+        if (height < maxSize && width < maxSize && false) {
             return this;
-        } else if (heigth < maxSize) {
-            heigth = maxSize;
+        } else if (height < maxSize) {
+            height = maxSize;
             width = (int) Math.floor(maxSize * ratio);
         } else {
             width = maxSize;
-            heigth = (int) Math.floor(maxSize / ratio);
+            height = (int) Math.floor(maxSize / ratio);
         }
 
-        return this.getScaledInstance(width, heigth, ProcessorImage.SCALE_SMOOTH);
+        return this.getScaledInstance(width, height, ProcessorImage.SCALE_SMOOTH);
     }
 
     public double[][] toArray() {
-        int heigth = getHeight();
+        int height = getHeight();
         int width = getWidth();
 
-        double[][] arr = new double[width][heigth];
+        double[][] arr = new double[width][height];
 
         for (int i = 0; i < width; i++) {
-            for (int j = 0; j < heigth; j++) {
+            for (int j = 0; j < height; j++) {
                 arr[i][j] = getRGB(i, j);
             }
         }
@@ -95,13 +95,13 @@ public class ProcessorImage extends BufferedImage {
     }
 
     public double[][] toArrayGreyscale() {
-        int heigth = getHeight();
+        int height = getHeight();
         int width = getWidth();
 
-        double[][] arr = new double[width][heigth];
+        double[][] arr = new double[width][height];
 
         for (int i = 0; i < width; i++) {
-            for (int j = 0; j < heigth; j++) {
+            for (int j = 0; j < height; j++) {
                 int color = Colour.toRGBArray(getRGB(i, j))[0];
 
                 arr[i][j] = color;

@@ -42,19 +42,19 @@ public class ImageProcessor {
     // </editor-fold>
 
     private int width;
-    private int heigth;
+    private int height;
 
     // <editor-fold desc="getters" defaultstate="collapsed">
     public int getWidth() {
         return width;
     }
 
-    public int getHeigth() {
-        return heigth;
+    public int getHeight() {
+        return height;
     }
 
     public double getIterationsFft() {
-        return (double) width * (double) width * (double) heigth * (double) heigth;
+        return (double) width * (double) width * (double) height * (double) height;
     }
     // </editor-fold>
 
@@ -120,11 +120,11 @@ public class ImageProcessor {
         this.imageGreyscale = image.toGrayScale();
 
         width = imageGreyscale.getWidth();
-        heigth = imageGreyscale.getHeight();
+        height = imageGreyscale.getHeight();
 
-        valuesImaginary = new double[width][heigth];
-        valuesReal = new double[width][heigth];
-        valuesAmplitude = new double[width][heigth];
+        valuesImaginary = new double[width][height];
+        valuesReal = new double[width][height];
+        valuesAmplitude = new double[width][height];
     }
 
     public void launchAnalysis() {
@@ -150,9 +150,9 @@ public class ImageProcessor {
     }
 
     public void updateRenderedImages() {
-        imageReal = ProcessorPixelMap.arrayToImage(valuesReal, width, heigth, treshold);
-        imageImaginary = ProcessorPixelMap.arrayToImage(valuesImaginary, width, heigth, treshold);
-        imageAmplitude = ProcessorPixelMap.arrayToImage(valuesAmplitude, width, heigth, treshold);
+        imageReal = ProcessorPixelMap.arrayToImage(valuesReal, width, height, treshold);
+        imageImaginary = ProcessorPixelMap.arrayToImage(valuesImaginary, width, height, treshold);
+        imageAmplitude = ProcessorPixelMap.arrayToImage(valuesAmplitude, width, height, treshold);
     }
 
     public static void print(Object o) {

@@ -24,12 +24,12 @@ public class ProcessorPixelMap {
         this.values = image.toArray();
     }
 
-    public ProcessorPixelMap(int width, int heigth) {
-        this.values = new double[width][heigth];
+    public ProcessorPixelMap(int width, int height) {
+        this.values = new double[width][height];
     }
 
-    public static ProcessorImage arrayToImage(double[][] values, int width, int heigth, int treshold) {
-        ProcessorImage img = new ProcessorImage(width, heigth, ProcessorImage.TYPE_INT_RGB);
+    public static ProcessorImage arrayToImage(double[][] values, int width, int height, int treshold) {
+        ProcessorImage img = new ProcessorImage(width, height, ProcessorImage.TYPE_INT_RGB);
 
         double max = getBiggestNumber(values, true);
         double min = getSmallestNumber(values, true);
@@ -65,8 +65,8 @@ public class ProcessorPixelMap {
         return img;
     }
 
-    public static ProcessorImage arrayToImage(double[][] values, int width, int heigth) {
-        return arrayToImage(values, width, heigth, 0);
+    public static ProcessorImage arrayToImage(double[][] values, int width, int height) {
+        return arrayToImage(values, width, height, 0);
     }
 
     public static double getSmallestNumber(double[][] arr, boolean absolute) {
