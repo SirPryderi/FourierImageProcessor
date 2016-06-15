@@ -156,7 +156,7 @@ public class ImageProcessor {
         //print("Processors: " + processors);
         fft.twoDfftMultiThreaded(valuesGreyscale, valuesReal, valuesImaginary, valuesAmplitude, valuesPhase, processors);
 
-        //fft.twoDfft(imageValues, realValues, imageValues, amplitutudeValues);
+        //fft.twoDfft(valuesGreyscale, valuesReal, valuesImaginary, valuesAmplitude, valuesPhase);
         //Initialises the fft algorithm 
         long endTime = System.currentTimeMillis();
         analysisTime = endTime - startTime;

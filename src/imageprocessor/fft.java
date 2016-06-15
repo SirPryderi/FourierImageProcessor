@@ -22,36 +22,40 @@ public class fft {
         ie, only pictures with even numbered dimensions are accepted
      */
     static void twoDfft(double[][] inputData, double[][] realOut, double[][] imagOut, double[][] amplitudeOut, double[][] phaseOut, int start, int end) {
-        int height = inputData.length;
-        int width = inputData[0].length;
+        int height = inputData[0].length;
+        int width = inputData.length;
         //used to cut the output image to the desired size
+
+        System.out.println(width);
+        System.out.println(height);
 
         if (start < 0) {
             throw new InvalidParameterException("Start index less than 0");
         }
 
-        if (end >= height) {
-            end = height - 1;
+        if (end >= width) {
+            end = width - 1;
             //throw new InvalidParameterException("End out bound");
         }
 
         //counter used to calculate efficiency
-        for (int yWave = start; yWave <= end; yWave++) {
+        for (int xWave = start; xWave <= end; xWave++) {
             //First loop which iterates on the input data
-            for (int xWave = 0; xWave < width; xWave++) {
+            for (int yWave = 0; yWave < height; yWave++) {
                 //Second loop which iterates on the input data
-                for (int ySpace = 0; ySpace < height; ySpace++) {
+                for (int xSpace = 0; xSpace < width; xSpace++) {
                     //First loop that iterates on the output data 
-                    for (int xSpace = 0; xSpace < width; xSpace++) {
+                    for (int ySpace = 0; ySpace < height; ySpace++) {
                         //Second loop that iterates on the output data
-                        realOut[yWave][xWave] += (inputData[ySpace][xSpace] * Math.cos(2 * Math.PI * ((1.0 * xWave * xSpace / width) + (1.0 * yWave * ySpace / height)))) / Math.sqrt(width * height);
+
+                        realOut[xWave][yWave] += (inputData[xSpace][ySpace] * Math.cos(2 * Math.PI * ((1.0 * yWave * ySpace / height) + (1.0 * xWave * xSpace / width)))) / Math.sqrt(width * height);
                         //calculates the real values of the frequency domain
-                        imagOut[yWave][xWave] -= (inputData[ySpace][xSpace] * Math.sin(2 * Math.PI * ((1.0 * xWave * xSpace / width) + (1.0 * yWave * ySpace / height)))) / Math.sqrt(width * height);
+                        imagOut[xWave][yWave] -= (inputData[xSpace][ySpace] * Math.sin(2 * Math.PI * ((1.0 * yWave * ySpace / height) + (1.0 * xWave * xSpace / width)))) / Math.sqrt(width * height);
                         //calculates the imaginary values of the frequency domain
-                        amplitudeOut[yWave][xWave] = Math.sqrt(realOut[yWave][xWave] * realOut[yWave][xWave] + imagOut[yWave][xWave] * imagOut[yWave][xWave]);
+                        amplitudeOut[xWave][yWave] = Math.sqrt(realOut[xWave][yWave] * realOut[xWave][yWave] + imagOut[xWave][yWave] * imagOut[xWave][yWave]);
                         //calculates the amplitude of the frequency domain 
-                        phaseOut[yWave][xWave] = Math.atan(imagOut[yWave][xWave] / realOut[yWave][xWave]);
-                        
+                        phaseOut[xWave][yWave] = Math.atan(imagOut[xWave][yWave] / realOut[xWave][yWave]);
+
                     }
                 }
             }
@@ -67,15 +71,15 @@ public class fft {
     }
 
     static void twoDfftMultiThreaded(double[][] inputData, double[][] realOut, double[][] imagOut, double[][] amplitudeOut, double[][] phaseOut, int threadsCount) {
-        int height = inputData.length;
+        int width = inputData.length;
 
-        int range = height / threadsCount;
+        int range = width / threadsCount;
 
         ExecutorService executor = Executors.newFixedThreadPool(threadsCount);
 
         List<Runnable> tasks = new ArrayList<>();
-        
-        for (int pieces = 0; pieces < height; pieces += range) {
+
+        for (int pieces = 0; pieces < width; pieces += range) {
             int start = pieces;
             int end = pieces + range - 1;
 
