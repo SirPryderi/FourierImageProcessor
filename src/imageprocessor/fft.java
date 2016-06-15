@@ -26,9 +26,6 @@ public class fft {
         int width = inputData.length;
         //used to cut the output image to the desired size
 
-        System.out.println(width);
-        System.out.println(height);
-
         if (start < 0) {
             throw new InvalidParameterException("Start index less than 0");
         }
@@ -54,7 +51,6 @@ public class fft {
                         //calculates the imaginary values of the frequency domain
                         amplitudeOut[xWave][yWave] = Math.sqrt(realOut[xWave][yWave] * realOut[xWave][yWave] + imagOut[xWave][yWave] * imagOut[xWave][yWave]);
                         //calculates the amplitude of the frequency domain 
-                        phaseOut[xWave][yWave] = Math.atan(imagOut[xWave][yWave] / realOut[xWave][yWave]);
                         phaseOut[xWave][yWave] = Math.atan2(imagOut[xWave][yWave], realOut[xWave][yWave]);
 
                     }
