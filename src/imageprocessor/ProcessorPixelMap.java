@@ -34,8 +34,8 @@ public class ProcessorPixelMap {
         double max = getBiggestNumber(values, true);
         double min = getSmallestNumber(values, true);
 
-        for (int y = 0; y < values.length; y++) {
-            for (int x = 0; x < values[y].length; x++) {
+        for (int x = 0; x < values.length; x++) {
+            for (int y = 0; y < values[x].length; y++) {
                 double value = values[x][y];
 
                 //print(value);
