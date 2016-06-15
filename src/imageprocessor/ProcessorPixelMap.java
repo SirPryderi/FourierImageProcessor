@@ -28,7 +28,7 @@ public class ProcessorPixelMap {
         this.values = new double[width][height];
     }
 
-    public static ProcessorImage arrayToImage(double[][] values, int width, int height, int treshold) {
+    public static ProcessorImage arrayToImage(double[][] values, int width, int height, int threshold) {
         ProcessorImage img = new ProcessorImage(width, height, ProcessorImage.TYPE_INT_RGB);
 
         double max = getBiggestNumber(values, true);
@@ -43,12 +43,12 @@ public class ProcessorPixelMap {
 
                 value = Math.abs(value);
                 
-                if (value < treshold) {
+                if (value < threshold) {
                     value = 0;
                 }
 
-                if (min < treshold) {
-                    min = treshold;
+                if (min < threshold) {
+                    min = threshold;
                 }
                 
                 if (value < min) {

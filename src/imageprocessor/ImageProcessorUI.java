@@ -53,7 +53,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         jSeparator1 = new javax.swing.JSeparator();
-        txtTreshold = new javax.swing.JTextField();
+        txtThreshold = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         mnSave = new javax.swing.JMenu();
@@ -193,22 +193,22 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         gridBagConstraints.gridy = 1;
         getContentPane().add(jSeparator1, gridBagConstraints);
 
-        txtTreshold.setText("0");
-        txtTreshold.setPreferredSize(new java.awt.Dimension(90, 32));
-        txtTreshold.addActionListener(new java.awt.event.ActionListener() {
+        txtThreshold.setText("0");
+        txtThreshold.setPreferredSize(new java.awt.Dimension(90, 32));
+        txtThreshold.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTresholdActionPerformed(evt);
+                txtThresholdActionPerformed(evt);
             }
         });
-        txtTreshold.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtThreshold.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtTresholdKeyTyped(evt);
+                txtThresholdKeyTyped(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 7;
-        getContentPane().add(txtTreshold, gridBagConstraints);
+        getContentPane().add(txtThreshold, gridBagConstraints);
 
         jMenu1.setText("File");
 
@@ -356,24 +356,24 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void txtTresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTresholdActionPerformed
+    private void txtThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtThresholdActionPerformed
         try {
-            int treshold = Integer.valueOf(txtTreshold.getText());
+            int threshold = Integer.valueOf(txtThreshold.getText());
 
-            imageProcessor.setTreshold(treshold);
+            imageProcessor.setThreshold(threshold);
 
             imageProcessor.updateRenderedImages();
 
             displayImage(imageProcessor.getImageReal());
         } catch (NumberFormatException numberFormatException) {
-            JOptionPane.showMessageDialog(rootPane, "Invalid treshold.", "Error", JOptionPane.ERROR_MESSAGE);
-            txtTreshold.setText(String.valueOf(imageProcessor.getTreshold()));
+            JOptionPane.showMessageDialog(rootPane, "Invalid threshold.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtThreshold.setText(String.valueOf(imageProcessor.getThreshold()));
         }
-    }//GEN-LAST:event_txtTresholdActionPerformed
+    }//GEN-LAST:event_txtThresholdActionPerformed
 
-    private void txtTresholdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTresholdKeyTyped
+    private void txtThresholdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtThresholdKeyTyped
 
-    }//GEN-LAST:event_txtTresholdKeyTyped
+    }//GEN-LAST:event_txtThresholdKeyTyped
 
     /**
      * @param args the command line arguments
@@ -482,6 +482,6 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem mnSaveImaginary;
     private javax.swing.JMenuItem mnSaveOriginal;
     private javax.swing.JMenuItem mnSaveReal;
-    private javax.swing.JTextField txtTreshold;
+    private javax.swing.JTextField txtThreshold;
     // End of variables declaration//GEN-END:variables
 }
