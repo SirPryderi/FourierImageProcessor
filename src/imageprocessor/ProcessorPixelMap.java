@@ -58,6 +58,8 @@ public class ProcessorPixelMap {
 
                 if (max > upperTreshold) {
                     max = upperTreshold;
+                } else {
+                    upperTreshold = max;
                 }
                 
 //                if (value < min) {

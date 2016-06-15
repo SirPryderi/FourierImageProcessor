@@ -55,6 +55,7 @@ public class fft {
                         amplitudeOut[xWave][yWave] = Math.sqrt(realOut[xWave][yWave] * realOut[xWave][yWave] + imagOut[xWave][yWave] * imagOut[xWave][yWave]);
                         //calculates the amplitude of the frequency domain 
                         phaseOut[xWave][yWave] = Math.atan(imagOut[xWave][yWave] / realOut[xWave][yWave]);
+                        phaseOut[xWave][yWave] = Math.atan2(imagOut[xWave][yWave], realOut[xWave][yWave]);
 
                     }
                 }
