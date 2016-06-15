@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -27,6 +28,8 @@ public class ImageProcessorUI extends javax.swing.JFrame {
      */
     public ImageProcessorUI() {
         initComponents();
+        componentsEnabledAtImageOpened = new JComponent[]{btnPictureBW, btnPictureOriginal, btnAnalysisStart};
+        componentsEnabledAtImageAnalysed = new JComponent[]{btnPictureReal, btnPictureImaginary, btnPictureAmplitude, mnSaveAmplitude, mnSaveImaginary, mnSaveReal, txtLowerThreshold, txtUpperThreshold};
     }
 
     /**
@@ -39,8 +42,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        bgRenderingType = new javax.swing.ButtonGroup();
         btnOpen = new javax.swing.JButton();
         lblURL = new javax.swing.JLabel();
         lblImage = new javax.swing.JLabel();
@@ -53,9 +55,12 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         jSeparator1 = new javax.swing.JSeparator();
-        txtThreshold = new javax.swing.JTextField();
+        txtLowerThreshold = new javax.swing.JTextField();
+        txtUpperThreshold = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        mnOpen = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         mnSave = new javax.swing.JMenu();
         mnSaveOriginal = new javax.swing.JMenuItem();
         mnSaveBW = new javax.swing.JMenuItem();
@@ -63,10 +68,14 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         mnSaveImaginary = new javax.swing.JMenuItem();
         mnSaveAmplitude = new javax.swing.JMenuItem();
         mnExport = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        mnCsv = new javax.swing.JMenu();
+        mnCsvAmplitude = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-
-        jScrollPane1.setViewportView(jTextPane1);
+        Greyscale = new javax.swing.JMenu();
+        mnRenderingRaw = new javax.swing.JRadioButtonMenuItem();
+        mnRenderingHeatmap = new javax.swing.JRadioButtonMenuItem();
+        mnRenderingFullSpectrum = new javax.swing.JRadioButtonMenuItem();
+        mnRenderingGreyscale = new javax.swing.JRadioButtonMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Fourier Image Processor");
@@ -99,6 +108,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         getContentPane().add(lblImage, gridBagConstraints);
 
         btnPictureOriginal.setText("Original");
+        btnPictureOriginal.setEnabled(false);
         btnPictureOriginal.setPreferredSize(new java.awt.Dimension(90, 32));
         btnPictureOriginal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -112,6 +122,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         getContentPane().add(btnPictureOriginal, gridBagConstraints);
 
         btnPictureBW.setText("B&W");
+        btnPictureBW.setEnabled(false);
         btnPictureBW.setPreferredSize(new java.awt.Dimension(90, 32));
         btnPictureBW.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -167,6 +178,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         getContentPane().add(btnPictureAmplitude, gridBagConstraints);
 
         btnAnalysisStart.setText("Image Analysis");
+        btnAnalysisStart.setEnabled(false);
         btnAnalysisStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAnalysisStartActionPerformed(evt);
@@ -193,24 +205,44 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         gridBagConstraints.gridy = 1;
         getContentPane().add(jSeparator1, gridBagConstraints);
 
-        txtThreshold.setText("0");
-        txtThreshold.setPreferredSize(new java.awt.Dimension(90, 32));
-        txtThreshold.addActionListener(new java.awt.event.ActionListener() {
+        txtLowerThreshold.setText("0");
+        txtLowerThreshold.setEnabled(false);
+        txtLowerThreshold.setPreferredSize(new java.awt.Dimension(45, 32));
+        txtLowerThreshold.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtThresholdActionPerformed(evt);
+                txtLowerThresholdActionPerformed(evt);
             }
         });
-        txtThreshold.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtLowerThreshold.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtThresholdKeyTyped(evt);
+                txtLowerThresholdKeyTyped(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 7;
-        getContentPane().add(txtThreshold, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        getContentPane().add(txtLowerThreshold, gridBagConstraints);
+
+        txtUpperThreshold.setText("-1");
+        txtUpperThreshold.setEnabled(false);
+        txtUpperThreshold.setPreferredSize(new java.awt.Dimension(45, 32));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        getContentPane().add(txtUpperThreshold, gridBagConstraints);
 
         jMenu1.setText("File");
+
+        mnOpen.setText("Open...");
+        mnOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnOpenActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mnOpen);
+        jMenu1.add(jSeparator3);
 
         mnSave.setText("Save");
 
@@ -258,13 +290,17 @@ public class ImageProcessorUI extends javax.swing.JFrame {
 
         mnExport.setText("Export");
 
-        jMenuItem1.setText("Amplitude");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        mnCsv.setText("CSV");
+
+        mnCsvAmplitude.setText("Amplitude");
+        mnCsvAmplitude.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                mnCsvAmplitudeActionPerformed(evt);
             }
         });
-        mnExport.add(jMenuItem1);
+        mnCsv.add(mnCsvAmplitude);
+
+        mnExport.add(mnCsv);
 
         jMenu1.add(mnExport);
 
@@ -272,6 +308,27 @@ public class ImageProcessorUI extends javax.swing.JFrame {
 
         jMenu2.setText("Edit");
         jMenuBar1.add(jMenu2);
+
+        Greyscale.setText("Rendering");
+
+        bgRenderingType.add(mnRenderingRaw);
+        mnRenderingRaw.setSelected(true);
+        mnRenderingRaw.setText("Raw");
+        Greyscale.add(mnRenderingRaw);
+
+        bgRenderingType.add(mnRenderingHeatmap);
+        mnRenderingHeatmap.setText("Heatmap");
+        Greyscale.add(mnRenderingHeatmap);
+
+        bgRenderingType.add(mnRenderingFullSpectrum);
+        mnRenderingFullSpectrum.setText("Full Spectrum");
+        Greyscale.add(mnRenderingFullSpectrum);
+
+        bgRenderingType.add(mnRenderingGreyscale);
+        mnRenderingGreyscale.setText("Greyscale");
+        Greyscale.add(mnRenderingGreyscale);
+
+        jMenuBar1.add(Greyscale);
 
         setJMenuBar(jMenuBar1);
 
@@ -312,11 +369,9 @@ public class ImageProcessorUI extends javax.swing.JFrame {
                 "Analysis Complete",
                 JOptionPane.INFORMATION_MESSAGE);
 
-        btnPictureAmplitude.setEnabled(true);
-        btnPictureBW.setEnabled(true);
-        btnPictureImaginary.setEnabled(true);
-        btnPictureOriginal.setEnabled(true);
-        btnPictureReal.setEnabled(true);
+        for (JComponent component : componentsEnabledAtImageAnalysed) {
+            component.setEnabled(true);
+        }
 
     }//GEN-LAST:event_btnAnalysisStartActionPerformed
 
@@ -348,17 +403,17 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         saveImage(imageProcessor.getImageImaginary());
     }//GEN-LAST:event_mnSaveImaginaryActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void mnCsvAmplitudeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnCsvAmplitudeActionPerformed
         try {
             ProcessorPixelMap.exportCsv("export.csv", imageProcessor.getValuesAmplitude());
         } catch (IOException ex) {
             Logger.getLogger(ImageProcessorUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_mnCsvAmplitudeActionPerformed
 
-    private void txtThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtThresholdActionPerformed
+    private void txtLowerThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLowerThresholdActionPerformed
         try {
-            int threshold = Integer.valueOf(txtThreshold.getText());
+            int threshold = Integer.valueOf(txtLowerThreshold.getText());
 
             imageProcessor.setThreshold(threshold);
 
@@ -367,13 +422,17 @@ public class ImageProcessorUI extends javax.swing.JFrame {
             displayImage(imageProcessor.getImageReal());
         } catch (NumberFormatException numberFormatException) {
             JOptionPane.showMessageDialog(rootPane, "Invalid threshold.", "Error", JOptionPane.ERROR_MESSAGE);
-            txtThreshold.setText(String.valueOf(imageProcessor.getThreshold()));
+            txtLowerThreshold.setText(String.valueOf(imageProcessor.getThreshold()));
         }
-    }//GEN-LAST:event_txtThresholdActionPerformed
+    }//GEN-LAST:event_txtLowerThresholdActionPerformed
 
-    private void txtThresholdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtThresholdKeyTyped
+    private void txtLowerThresholdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtLowerThresholdKeyTyped
 
-    }//GEN-LAST:event_txtThresholdKeyTyped
+    }//GEN-LAST:event_txtLowerThresholdKeyTyped
+
+    private void mnOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnOpenActionPerformed
+        choosePicture();
+    }//GEN-LAST:event_mnOpenActionPerformed
 
     /**
      * @param args the command line arguments
@@ -433,6 +492,14 @@ public class ImageProcessorUI extends javax.swing.JFrame {
             Logger.getLogger(ImageProcessorUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        for (JComponent component : componentsEnabledAtImageOpened) {
+            component.setEnabled(true);
+        }
+        
+        for (JComponent component : componentsEnabledAtImageAnalysed) {
+            component.setEnabled(false);
+        }
+
         displayImage(imageProcessor.getImageGreyscale());
 
     }
@@ -457,6 +524,8 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu Greyscale;
+    private javax.swing.ButtonGroup bgRenderingType;
     private javax.swing.JButton btnAnalysisStart;
     private javax.swing.JButton btnOpen;
     private javax.swing.JButton btnPictureAmplitude;
@@ -469,19 +538,29 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JLabel lblImage;
     private javax.swing.JLabel lblURL;
+    private javax.swing.JMenu mnCsv;
+    private javax.swing.JMenuItem mnCsvAmplitude;
     private javax.swing.JMenu mnExport;
+    private javax.swing.JMenuItem mnOpen;
+    private javax.swing.JRadioButtonMenuItem mnRenderingFullSpectrum;
+    private javax.swing.JRadioButtonMenuItem mnRenderingGreyscale;
+    private javax.swing.JRadioButtonMenuItem mnRenderingHeatmap;
+    private javax.swing.JRadioButtonMenuItem mnRenderingRaw;
     private javax.swing.JMenu mnSave;
     private javax.swing.JMenuItem mnSaveAmplitude;
     private javax.swing.JMenuItem mnSaveBW;
     private javax.swing.JMenuItem mnSaveImaginary;
     private javax.swing.JMenuItem mnSaveOriginal;
     private javax.swing.JMenuItem mnSaveReal;
-    private javax.swing.JTextField txtThreshold;
+    private javax.swing.JTextField txtLowerThreshold;
+    private javax.swing.JTextField txtUpperThreshold;
     // End of variables declaration//GEN-END:variables
+
+    JComponent[] componentsEnabledAtImageOpened;
+
+    JComponent[] componentsEnabledAtImageAnalysed;
 }
