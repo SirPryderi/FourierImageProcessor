@@ -29,7 +29,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     public ImageProcessorUI() {
         initComponents();
         componentsEnabledAtImageOpened = new JComponent[]{btnPictureBW, btnPictureOriginal, btnAnalysisStart};
-        componentsEnabledAtImageAnalysed = new JComponent[]{btnPictureReal, btnPictureImaginary, btnPictureAmplitude, mnSaveAmplitude, mnSaveImaginary, mnSaveReal, txtLowerThreshold, txtUpperThreshold};
+        componentsEnabledAtImageAnalysed = new JComponent[]{btnPictureReal, btnPictureImaginary, btnPictureAmplitude, btnPicturePhase, mnSaveAmplitude, mnSaveImaginary, mnSaveReal, txtLowerThreshold, txtUpperThreshold};
     }
 
     /**
@@ -57,6 +57,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         txtLowerThreshold = new javax.swing.JTextField();
         txtUpperThreshold = new javax.swing.JTextField();
+        btnPicturePhase = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         mnOpen = new javax.swing.JMenuItem();
@@ -104,7 +105,8 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.gridheight = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         getContentPane().add(lblImage, gridBagConstraints);
 
         btnPictureOriginal.setText("Original");
@@ -186,7 +188,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.ipadx = 11;
         gridBagConstraints.insets = new java.awt.Insets(0, 36, 0, 36);
         getContentPane().add(btnAnalysisStart, gridBagConstraints);
@@ -220,18 +222,36 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         getContentPane().add(txtLowerThreshold, gridBagConstraints);
 
         txtUpperThreshold.setText("-1");
         txtUpperThreshold.setEnabled(false);
         txtUpperThreshold.setPreferredSize(new java.awt.Dimension(45, 32));
+        txtUpperThreshold.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUpperThresholdActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        getContentPane().add(txtUpperThreshold, gridBagConstraints);
+
+        btnPicturePhase.setText("Phase");
+        btnPicturePhase.setEnabled(false);
+        btnPicturePhase.setPreferredSize(new java.awt.Dimension(90, 32));
+        btnPicturePhase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPicturePhaseActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        getContentPane().add(txtUpperThreshold, gridBagConstraints);
+        getContentPane().add(btnPicturePhase, gridBagConstraints);
 
         jMenu1.setText("File");
 
@@ -412,18 +432,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     }//GEN-LAST:event_mnCsvAmplitudeActionPerformed
 
     private void txtLowerThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLowerThresholdActionPerformed
-        try {
-            int threshold = Integer.valueOf(txtLowerThreshold.getText());
-
-            imageProcessor.setThreshold(threshold);
-
-            imageProcessor.updateRenderedImages();
-
-            displayImage(imageProcessor.getImageReal());
-        } catch (NumberFormatException numberFormatException) {
-            JOptionPane.showMessageDialog(rootPane, "Invalid threshold.", "Error", JOptionPane.ERROR_MESSAGE);
-            txtLowerThreshold.setText(String.valueOf(imageProcessor.getThreshold()));
-        }
+        updateThresholds();
     }//GEN-LAST:event_txtLowerThresholdActionPerformed
 
     private void txtLowerThresholdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtLowerThresholdKeyTyped
@@ -434,6 +443,31 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         choosePicture();
     }//GEN-LAST:event_mnOpenActionPerformed
 
+    private void txtUpperThresholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUpperThresholdActionPerformed
+        updateThresholds();
+    }//GEN-LAST:event_txtUpperThresholdActionPerformed
+
+    private void btnPicturePhaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPicturePhaseActionPerformed
+        displayImage(imageProcessor.getImagePhase());
+    }//GEN-LAST:event_btnPicturePhaseActionPerformed
+
+    private void updateThresholds(){
+        try {
+            double lowerThreshold = Double.valueOf(txtLowerThreshold.getText());
+            double upperThreshold = Double.valueOf(txtUpperThreshold.getText());
+
+            imageProcessor.setLowerThreshold(lowerThreshold);
+            imageProcessor.setUpperThreshold(upperThreshold);
+
+            imageProcessor.updateRenderedImages();
+
+            displayImage(imageProcessor.getImageAmplitude());
+        } catch (NumberFormatException numberFormatException) {
+            JOptionPane.showMessageDialog(rootPane, "Invalid threshold.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtLowerThreshold.setText(String.valueOf(imageProcessor.getLowerThreshold()));
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -532,6 +566,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
     private javax.swing.JButton btnPictureBW;
     private javax.swing.JButton btnPictureImaginary;
     private javax.swing.JButton btnPictureOriginal;
+    private javax.swing.JButton btnPicturePhase;
     private javax.swing.JButton btnPictureReal;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;

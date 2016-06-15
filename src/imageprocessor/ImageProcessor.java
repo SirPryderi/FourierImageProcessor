@@ -18,6 +18,7 @@ public class ImageProcessor {
     private ProcessorImage imageReal;
     private ProcessorImage imageImaginary;
     private ProcessorImage imageAmplitude;
+    private ProcessorImage imagePhase;
 
     // <editor-fold desc="getters" defaultstate="collapsed">
     public ProcessorImage getImageGreyscale() {
@@ -38,6 +39,10 @@ public class ImageProcessor {
 
     public ProcessorImage getImageAmplitude() {
         return imageAmplitude;
+    }
+
+    public ProcessorImage getImagePhase() {
+        return imagePhase;
     }
     // </editor-fold>
 
@@ -62,6 +67,7 @@ public class ImageProcessor {
     private double[][] valuesReal;
     private double[][] valuesImaginary;
     private double[][] valuesAmplitude;
+    private double[][] valuesPhase;
 
     // <editor-fold desc="getters" defaultstate="collapsed">
     public double[][] getValuesGreyscale() {
@@ -89,15 +95,26 @@ public class ImageProcessor {
     }
     // </editor-fold>
 
-    private int threshold = 0;
+    private double lowerThreshold = 0;
+    private double upperThreshold = Double.MAX_VALUE;
 
-    public int getThreshold() {
-        return threshold;
+    // <editor-fold desc="getters" defaultstate="collapsed">
+    public double getLowerThreshold() {
+        return lowerThreshold;
     }
 
-    public void setThreshold(int threshold) {
-        this.threshold = threshold;
+    public void setLowerThreshold(double lowerThreshold) {
+        this.lowerThreshold = lowerThreshold;
     }
+
+    public double getUpperThreshold() {
+        return upperThreshold;
+    }
+
+    public void setUpperThreshold(double upperThreshold) {
+        this.upperThreshold = upperThreshold;
+    }
+    // </editor-fold>
 
     /**
      * Constructor
@@ -125,6 +142,7 @@ public class ImageProcessor {
         valuesImaginary = new double[width][height];
         valuesReal = new double[width][height];
         valuesAmplitude = new double[width][height];
+        valuesPhase = new double[width][height];
     }
 
     public void launchAnalysis() {
@@ -136,7 +154,7 @@ public class ImageProcessor {
         int processors = Runtime.getRuntime().availableProcessors();
 
         //print("Processors: " + processors);
-        fft.twoDfftMultiThreaded(valuesGreyscale, valuesReal, valuesImaginary, valuesAmplitude, processors);
+        fft.twoDfftMultiThreaded(valuesGreyscale, valuesReal, valuesImaginary, valuesAmplitude, valuesPhase, processors);
 
         //fft.twoDfft(imageValues, realValues, imageValues, amplitutudeValues);
         //Initialises the fft algorithm 
@@ -150,9 +168,10 @@ public class ImageProcessor {
     }
 
     public void updateRenderedImages() {
-        imageReal = ProcessorPixelMap.arrayToImage(valuesReal, width, height, threshold);
-        imageImaginary = ProcessorPixelMap.arrayToImage(valuesImaginary, width, height, threshold);
-        imageAmplitude = ProcessorPixelMap.arrayToImage(valuesAmplitude, width, height, threshold);
+        imageReal = ProcessorPixelMap.arrayToImage(valuesReal, width, height, lowerThreshold, upperThreshold);
+        imageImaginary = ProcessorPixelMap.arrayToImage(valuesImaginary, width, height, lowerThreshold, upperThreshold);
+        imageAmplitude = ProcessorPixelMap.arrayToImage(valuesAmplitude, width, height, lowerThreshold, upperThreshold);
+        imagePhase = ProcessorPixelMap.arrayToImage(valuesPhase, width, height, lowerThreshold, upperThreshold);
     }
 
     public static void print(Object o) {

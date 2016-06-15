@@ -28,7 +28,7 @@ public class ProcessorPixelMap {
         this.values = new double[width][height];
     }
 
-    public static ProcessorImage arrayToImage(double[][] values, int width, int height, int threshold) {
+    public static ProcessorImage arrayToImage(double[][] values, int width, int height, double lowerThreshold, double upperTreshold) {
         ProcessorImage img = new ProcessorImage(width, height, ProcessorImage.TYPE_INT_RGB);
 
         double max = getBiggestNumber(values, true);
@@ -43,21 +43,30 @@ public class ProcessorPixelMap {
 
                 value = Math.abs(value);
                 
-                if (value < threshold) {
-                    value = 0;
+                if (value < lowerThreshold) {
+                    value = lowerThreshold;
                 }
 
-                if (min < threshold) {
-                    min = threshold;
+                if (min < lowerThreshold) {
+                    min = lowerThreshold;
                 }
                 
-                if (value < min) {
-                    System.err.println("PUTTANA LA MARMELLATA");
+                if (value > upperTreshold) {
+                    // This value could either be zeroed or maxed
+                    value = upperTreshold;
                 }
 
-                if (value > max) {
-                    System.err.println("PUTTANA LA MERDA");
+                if (max > upperTreshold) {
+                    max = upperTreshold;
                 }
+                
+//                if (value < min) {
+//                    System.err.println("PUTTANA LA MARMELLATA");
+//                }
+//
+//                if (value > max) {
+//                    System.err.println("PUTTANA LA MERDA");
+//                }
 
                 double percentage = (value - min) / (max - min);
 
@@ -70,7 +79,7 @@ public class ProcessorPixelMap {
 
                 int Pixel3 = Colour.getGreyFromHex((int) value);
 
-                img.setRGB(x, y, Pixel3);
+                img.setRGB(x, y, Pixel0);
             }
         }
 
@@ -78,7 +87,7 @@ public class ProcessorPixelMap {
     }
 
     public static ProcessorImage arrayToImage(double[][] values, int width, int height) {
-        return arrayToImage(values, width, height, 0);
+        return arrayToImage(values, width, height, 0, Double.MAX_VALUE);
     }
 
     public static double getSmallestNumber(double[][] arr, boolean absolute) {

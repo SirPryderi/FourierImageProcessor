@@ -54,7 +54,7 @@ public class Colour {
     }
 
     public static int percentageToColorSpectrum(double percentage) {
-        percentage = percentage * 0.5d;
+        percentage = percentage * 0.9d;
 
         Color RGB = Color.getHSBColor((float) percentage, 1.0f, 1.0f);
 

@@ -17,22 +17,24 @@ class AnalysisThread implements Runnable {
     private final double[][] realOut;
     private final double[][] imagOut;
     private final double[][] amplitudeOut;
+    private final double[][] phaseOut;
 
     private final int start;
     private final int end;
 
-    public AnalysisThread(double[][] inputData, double[][] realOut, double[][] imagOut, double[][] amplitudeOut, int start, int end) {
+    public AnalysisThread(double[][] inputData, double[][] realOut, double[][] imagOut, double[][] amplitudeOut, double[][] phaseOut, int start, int end) {
         this.inputData = inputData;
         this.realOut = realOut;
         this.imagOut = imagOut;
         this.amplitudeOut = amplitudeOut;
+        this.phaseOut = phaseOut;
         this.start = start;
         this.end = end;
     }
 
     @Override
     public void run() {
-        twoDfft(inputData, realOut, imagOut, amplitudeOut, start, end);
+        twoDfft(inputData, realOut, imagOut, amplitudeOut, phaseOut, start, end);
         // System.out.printf("%d %d finished\n", start, end);
     }
 }
