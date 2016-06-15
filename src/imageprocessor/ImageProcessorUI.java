@@ -251,6 +251,7 @@ public class ImageProcessorUI extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         getContentPane().add(btnPicturePhase, gridBagConstraints);
 
         jMenu1.setText("File");
